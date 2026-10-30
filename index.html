@@ -12,7 +12,7 @@
   <section id="main-page" class="page-view active">
     <div class="welcome-box">
       <h1>☁️ Cloud Memo App</h1>
-      <p>언제 어디서나 안전하게 메모를 보관하고 폴더로 정리하세요.</p>
+      <p>메모를 남기면 AI가 요약하고 태그를 붙여 깔끔하게 정리해 드립니다.</p>
       <button id="go-to-login-btn" class="primary-btn">시작하기</button>
     </div>
   </section>
@@ -30,10 +30,10 @@
     </div>
   </section>
 
-  <!-- 3. 실제 메모 페이지 (기존 3단 구조) -->
+  <!-- 3. 실제 메모 페이지 (3단 구조) -->
   <section id="memo-page" class="page-view">
     <div class="app-container">
-      
+
       <aside class="sidebar-left">
         <div class="user-profile">
           <span id="user-name">사용자님</span>
@@ -45,69 +45,88 @@
         <div class="folder-directory">
           <h3>📂 폴더 및 메모</h3>
           <button class="add-folder-btn">+ 새 폴더</button>
-          <div class="editor-buttons" style="display: flex; gap: 8px;">
-            <button id="new-memo-btn" class="action-btn" style="flex: 1;">새 메모 작성</button>
-            <button id="select-mode-btn" class="action-btn secondary-select-btn" style="flex: 1;">메모 선택</button>
+          <div class="editor-buttons">
+            <button id="new-memo-btn" class="action-btn">새 메모 작성</button>
+            <button id="select-mode-btn" class="action-btn secondary-select-btn">메모 선택</button>
           </div>
-          
+
+          <button id="all-memos-btn" class="all-memos-btn">🗂️ 모든 메모</button>
           <ul id="folder-list"></ul>
 
           <div class="memo-control-box">
             <button id="delete-btn" class="control-btn delete-btn">🗑️  메모 / 폴더 삭제</button>
           </div>
         </div>
-        <div class="sidebar-setting-box" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #3c3c3c;">
-          <label for="view-option-select" style="font-size: 14px; color: #858585; display: block; margin-bottom: 8px; font-weight: 600;">뷰 설정</label>
-          <select id="view-option-select" class="setting-select" style="width: 100%; background: #37373d; color: #ccc; border: 1px solid #555; padding: 8px; border-radius: 4px; font-size: 14px; outline: none; cursor: pointer;">
+        <div class="sidebar-setting-box">
+          <label for="view-option-select">뷰 설정</label>
+          <select id="view-option-select" class="setting-select">
             <option value="list-on-grid-off">목록에서 파일 보여주기 + 그리드 미사용</option>
-            <option value="list-off-grid-on" selected>목록에서 파일 숨기기 + 그리드 사용</option>
+            <option value="list-off-grid-on">목록에서 파일 숨기기 + 그리드 사용</option>
           </select>
         </div>
       </aside>
 
-      <!-- 중앙: 메모 입력 콘솔 -->
+      <!-- 중앙: 메모 입력 콘솔 / 폴더 대시보드 -->
       <main class="memo-center">
 
-        <button id="memo-back-btn" class="secondary-btn" style="position: absolute; right: 40px; top: 40px; z-index: 5; display: none;">뒤로가기</button>
+        <button id="memo-back-btn" class="secondary-btn memo-back-btn">뒤로가기</button>
 
         <div class="memo-form" id="memo-editor-form">
           <input type="text" id="memo-title" placeholder="제목 없는 메모">
           <textarea id="memo-content" placeholder="여기에 생각을 기록하세요..."></textarea>
           <div class="form-footer">
-            <div class="char-counter">공백 포함: <span id="char-count">0</span>자</div>
-            <button id="save-btn" class="primary-btn">메모 저장</button>
+            <div class="footer-info">
+              <div class="char-counter">공백 포함: <span id="char-count">0</span>자</div>
+              <span id="save-status" class="save-status"></span>
+            </div>
+            <button id="save-btn" class="primary-btn">수정</button>
           </div>
         </div>
 
-        <div class="folder-dashboard" id="folder-dashboard" style="display: none;">
+        <div class="folder-dashboard" id="folder-dashboard">
           <div class="dashboard-header">
             <h2 id="current-folder-title">폴더 이름</h2>
-            <p class="dashboard-desc">이 폴더에 저장된 메모 목록입니다.</p>
+            <p class="dashboard-desc" id="dashboard-desc"></p>
+            <input type="search" id="dashboard-search" class="dashboard-search" placeholder="🔍 제목 · 내용 · 요약 · 태그 검색">
+            <div id="tag-filter" class="tag-list tag-filter"></div>
           </div>
           <div class="file-grid" id="dashboard-file-list"></div>
         </div>
-        
+
       </main>
 
-      <!-- 오른쪽 공간 -->
+      <!-- 오른쪽: AI 정리 패널 -->
       <aside class="sidebar-right">
         <button id="toggle-right-btn" class="sidebar-toggle-btn right-trigger">▶</button>
 
         <div class="ai-tools-container">
-          <h3>AI 도구</h3>
-          <p class="ai-desc">현재 에디터에 적힌 본문을 기반으로 AI 기능을 실행합니다.</p>
-          
+          <h3>✨ AI 정리</h3>
+          <p class="ai-desc">메모를 저장하면 AI가 자동으로 요약하고 태그와 카테고리를 붙여 줍니다.</p>
+
           <hr class="ai-divider">
 
-          <div class="ai-section">
-            <h4>메모 요약하기</h4>
-            <button id="ai-summary-btn" class="ai-action-btn">📝 현재 본문 요약 생성</button>
-            
-            <div id="ai-summary-result-box" class="ai-result-box" style="display: none;">
-              <h5>요약 결과</h5>
-              <div id="ai-summary-text" class="ai-result-text"></div>
-              <button id="ai-summary-save-btn" class="ai-save-btn">💾 이 요약을 새 파일로 저장</button>
+          <div id="ai-panel-empty" class="ai-empty">메모를 열면 AI 정리 결과가 여기에 표시됩니다.</div>
+
+          <div id="ai-panel" class="ai-panel" hidden>
+            <div class="ai-panel-head">
+              <span id="ai-category" class="category-badge"></span>
+              <span id="ai-status" class="ai-status"></span>
             </div>
+            <div id="ai-result" class="ai-result">
+              <section class="ai-section">
+                <h4>요약</h4>
+                <p id="ai-summary" class="ai-result-text"></p>
+              </section>
+              <section class="ai-section">
+                <h4>핵심 내용</h4>
+                <ul id="ai-keypoints" class="ai-keypoints"></ul>
+              </section>
+              <section class="ai-section">
+                <h4>태그</h4>
+                <div id="ai-tags" class="tag-list"></div>
+              </section>
+            </div>
+            <button id="ai-analyze-btn" class="ai-action-btn">🔄 지금 다시 분석하기</button>
           </div>
         </div>
       </aside>

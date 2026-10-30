@@ -218,9 +218,10 @@ body {
   background-color: #252526;
   border-left: 1px solid #3c3c3c;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding: 20px;
+  overflow-y: auto;
 }
 .user-profile {
   display: flex;
@@ -297,7 +298,7 @@ body {
 .dashboard-desc {
   font-size: 18px; /* 안내 문구 가독성 확대 */
   color: #858585;
-  margin-bottom: 50px; /* 설명 문구와 아래 카드 그리드 사이의 세로 간격 축소 */
+  margin-bottom: 20px;
 }
 
 /* 파일들을 카드 형태로 배치할 그리드 */
@@ -305,8 +306,9 @@ body {
   display: grid;
   /* 화면 크기에 맞춰 카드가 자동으로 채워지며, 최소 240px 너비를 보장 */
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  row-gap: 60px;
+  row-gap: 20px;
   column-gap: 20px;
+  align-items: start;
   overflow-y: auto; /* 메모 카드가 많아지면 중앙 영역 내부에서만 부드럽게 스크롤 */
   padding-top: 6px;
   padding-bottom: 40px;
@@ -322,7 +324,8 @@ body {
   transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
   display: flex;
   flex-direction: column;
-  height: 180px; /* 125% 글자 크기를 수용할 수 있도록 높이 상향 */
+  min-height: 220px;
+  gap: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
 }
 
@@ -338,7 +341,6 @@ body {
   display: flex;
   font-size: 20px; 
   color: white;
-  margin-bottom: 12px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis; 
@@ -698,6 +700,7 @@ body {
       AI 도구 패널 스타일 스타일
    ================================= */
 .ai-tools-container {
+  width: 100%;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -718,7 +721,7 @@ body {
 
 .ai-divider {
   border: 0;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid #3c3c3c;
   margin: 5px 0;
 }
 
@@ -746,48 +749,8 @@ body {
 }
 
 .ai-action-btn:disabled {
-  background-color: #cbd5e1;
+  background-color: #4b5563;
   cursor: not-allowed;
-}
-
-/* 결과창 상자 */
-.ai-result-box {
-  margin-top: 15px;
-  background-color: #cecece;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  padding: 12px;
-}
-
-.ai-result-box h5 {
-  margin: 0 0 8px 0;
-  color: #475569;
-  font-size: 0.85rem;
-}
-
-.ai-result-text {
-  font-size: 0.9rem;
-  color: #0f172a;
-  line-height: 1.5;
-  white-space: pre-wrap; /* 줄바꿈 유지 */
-  margin-bottom: 12px;
-}
-
-/* 결과 저장 버튼 */
-.ai-save-btn {
-  width: 100%;
-  background-color: #795aea; /* 보라색 계열 */
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.ai-save-btn:hover {
-  background-color: #4f46e5;
 }
 
 /* ==========================================
@@ -865,3 +828,187 @@ body {
   border: 1px dashed #555555;
   background-color: #222222;
 }
+/* ==========================================
+   AI 자동 정리 · 인덱싱 UI
+   ========================================== */
+[hidden] { display: none !important; }
+
+.all-memos-btn {
+  background: transparent;
+  color: #cccccc;
+  border: 1px solid #3c3c3c;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+.all-memos-btn:hover, .all-memos-btn.active {
+  background-color: #37373d;
+  color: #ffffff;
+}
+
+.folder-item { justify-content: space-between; }
+.folder-menu-btn {
+  background: none;
+  border: none;
+  color: #858585;
+  cursor: grab;
+  padding: 4px 8px;
+  font-size: 14px;
+}
+
+.sidebar-setting-box {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #3c3c3c;
+}
+.sidebar-setting-box label {
+  font-size: 14px;
+  color: #858585;
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.setting-select {
+  width: 100%;
+  background: #37373d;
+  color: #ccc;
+  border: 1px solid #555;
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+}
+
+.editor-buttons .action-btn { flex: 1; }
+
+.memo-back-btn {
+  position: absolute;
+  right: 40px;
+  top: 40px;
+  z-index: 5;
+  display: none;
+}
+
+.footer-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.save-status {
+  font-size: 14px;
+  color: #858585;
+}
+
+/* 대시보드 검색 · 태그 필터 */
+.dashboard-search {
+  width: 100%;
+  background: #252526;
+  border: 1px solid #3c3c3c;
+  border-radius: 6px;
+  color: #d4d4d4;
+  padding: 10px 14px;
+  font-size: 16px;
+  outline: none;
+  margin-bottom: 12px;
+}
+.dashboard-search:focus { border-color: #5398ff; }
+.tag-filter { margin-bottom: 20px; }
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tag-chip {
+  background: #2f3b52;
+  color: #9cc3ff;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.tag-chip:hover { border-color: #5398ff; }
+.tag-chip.active {
+  background: #5398ff;
+  color: #ffffff;
+}
+
+/* 카테고리 배지 */
+.category-badge {
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 13px;
+  font-weight: 600;
+  background: #3c3c3c;
+  color: #d4d4d4;
+}
+.category-badge[data-category="업무"] { background: #1e3a5f; color: #8cc4ff; }
+.category-badge[data-category="학습"] { background: #1f4231; color: #8ee0b0; }
+.category-badge[data-category="아이디어"] { background: #4a3a12; color: #ffd36e; }
+.category-badge[data-category="일정"] { background: #4a1f2e; color: #ff9fbf; }
+.category-badge[data-category="개인"] { background: #3a2a52; color: #c9a8ff; }
+
+/* AI 처리 상태 */
+.ai-status { font-size: 13px; color: #858585; }
+.ai-status-pending { color: #ffd36e; }
+.ai-status-error { color: #ff8a80; }
+.ai-status-stale { color: #9cdcfe; }
+.ai-status-done { color: #8ee0b0; }
+
+/* 메모 카드 */
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 22px;
+}
+.card-checkbox { cursor: pointer; }
+.file-card.selected { border-color: #ef4444; }
+.file-card .card-summary { color: #c8c8c8; }
+.card-date {
+  margin-top: auto;
+  font-size: 13px;
+  color: #6b6b6b;
+}
+
+/* 오른쪽 AI 패널 */
+.ai-empty {
+  color: #858585;
+  font-size: 15px;
+  line-height: 1.6;
+}
+.ai-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.ai-panel-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.ai-result {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.ai-result-text {
+  font-size: 16px;
+  color: #d4d4d4;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+.ai-keypoints {
+  padding-left: 20px;
+  color: #d4d4d4;
+  font-size: 15px;
+  line-height: 1.6;
+}
+.ai-keypoints li { margin-bottom: 4px; }
